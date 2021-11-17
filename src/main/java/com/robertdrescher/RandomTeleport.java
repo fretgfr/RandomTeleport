@@ -7,9 +7,7 @@ public final class RandomTeleport extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("Registering randomteleport command.");
         this.getCommand("randomteleport").setExecutor(new TeleportCommand());
-        System.out.println("Done.");
     }
 
     @Override
