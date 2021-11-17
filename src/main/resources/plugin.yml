@@ -1,0 +1,6 @@
+name: RandomTeleport
+version: '${project.version}'
+main: com.robertdrescher.RandomTeleport
+api-version: 1.17
+authors: [ Razgro ]
+description: A plugin for randomly teleporting players in the world.
