@@ -4,3 +4,10 @@ main: com.robertdrescher.RandomTeleport
 api-version: 1.17
 authors: [ Razgro ]
 description: A plugin for randomly teleporting players in the world.
+commands:
+  randomteleport:
+    description: Randomly teleports a player in the current world.
+    aliases:
+      - randomtp
+      - rtp
+    usage: /<command>
