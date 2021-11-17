@@ -1,6 +1,5 @@
 package com.robertdrescher.commands;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -23,7 +22,7 @@ public class TeleportCommand implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("randomteleport")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                if(player.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
+                if (player.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
                     Location newLocation = overworldWild(player);
                     player.sendMessage("Randomly teleported to " + newLocation.getBlockX() + ", " + newLocation.getBlockY() + ", " + newLocation.getBlockZ());
                 } else {
@@ -36,13 +35,14 @@ public class TeleportCommand implements CommandExecutor {
     }
 
     private Location overworldWild(Player player) {
+        //Some of my old code. Probably won't work well on new versions without some changes.
         Random random = new Random();
 
         double xValue = random.nextInt(MAX_X);
         double zValue = random.nextInt(MAX_Z);
         int yValue = 0;
 
-        //To put them in the middle of the block instad of on the corner
+        //To put them in the middle of the block instead of on the corner
         if (xValue > 0) {
             xValue += .5;
         } else {
@@ -56,28 +56,21 @@ public class TeleportCommand implements CommandExecutor {
         }
 
         //Loop through the blocks at the location and see if any of them are safe. Probably if they're Grass
-        for (int i = 1; i < 256; i++) {
-            Block candidate = player.getWorld().getBlockAt((int) xValue, i, (int) zValue);
-            if (candidate.getType().equals(Material.AIR)) {
-                if (candidate.getRelative(0, 1, 0).getType().equals(Material.AIR)) {
-                    if (candidate.getRelative(0, 2, 0).getType().equals(Material.AIR)) {
-                        if (player.getWorld().getBlockAt((int) xValue, i, (int) zValue).getType().equals(Material.GRASS_BLOCK)) {
-                            //found a good location. Standing on a grass block with air the two blocks above it.
-                            yValue = i;
-                            break;
-                        }
-                    }
+        Block candidate = player.getWorld().getHighestBlockAt((int) xValue, (int) zValue);
+        if (candidate.getType().equals(Material.GRASS_BLOCK)) {
+            if (candidate.getRelative((int) xValue, candidate.getY() + 1, (int) zValue).getType().equals(Material.AIR)) {
+                if (candidate.getRelative((int) xValue, candidate.getY() + 2, (int) zValue).getType().equals(Material.AIR)) {
+                    yValue = candidate.getY();
                 }
             }
         }
 
         if (yValue == 0) {
-            overworldWild(player); // Try a new location
+            return overworldWild(player); // Try a new location
         } else {
-            Location wildLocation = new Location(player.getWorld(), xValue, (double) yValue, zValue);
+            Location wildLocation = new Location(player.getWorld(), xValue, yValue + 1, zValue);
             player.teleport(wildLocation);
             return wildLocation;
         }
-        return null;
     }
 }
