@@ -35,7 +35,6 @@ public class TeleportCommand implements CommandExecutor {
     }
 
     private Location overworldWild(Player player) {
-        //Some of my old code. Probably won't work well on new versions without some changes.
         Random random = new Random();
 
         double xValue = random.nextInt(MAX_X);
@@ -55,7 +54,6 @@ public class TeleportCommand implements CommandExecutor {
             zValue -= .5;
         }
 
-        //Loop through the blocks at the location and see if any of them are safe. Probably if they're Grass
         Block candidate = player.getWorld().getHighestBlockAt((int) xValue, (int) zValue);
         if (candidate.getType().equals(Material.GRASS_BLOCK)) {
             if (candidate.getRelative((int) xValue, candidate.getY() + 1, (int) zValue).getType().equals(Material.AIR)) {
